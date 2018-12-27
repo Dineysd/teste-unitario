@@ -7,12 +7,13 @@ import java.util.Date;
 import br.teste.locacao.entidades.Locacao;
 import br.teste.locacao.entidades.Produto;
 import br.teste.locacao.entidades.Usuario;
+import br.teste.locacao.exceptions.ProdutoSemEstoqueException;
 
 public class LocacaoService {
 	
 	public Locacao alugar(Usuario usuario, Produto produto) throws Exception {
 		
-		if(produto.getEstoque() == 0) {throw new Exception("Sem estoque");}
+		if(produto.getEstoque() == 0) {throw new ProdutoSemEstoqueException();}
 		
 		Locacao locacao = new Locacao();
 		locacao.setProduto(produto);
