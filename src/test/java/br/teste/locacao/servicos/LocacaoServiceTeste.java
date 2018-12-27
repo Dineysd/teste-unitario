@@ -13,6 +13,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 
+import br.teste.locacao.entidades.Carro;
 import br.teste.locacao.entidades.Filme;
 import br.teste.locacao.entidades.Locacao;
 import br.teste.locacao.entidades.Produto;
@@ -25,7 +26,7 @@ public class LocacaoServiceTeste {
 	public ErrorCollector error = new ErrorCollector();
 	
 	@Test
-	public void testeLocacao() {
+	public void testeLocacao() throws Exception {
 		
 		//Cenario onde inicilizaremos as variaveis ou objetos
 		Locacao locacao = new Locacao();
@@ -49,6 +50,23 @@ public class LocacaoServiceTeste {
 		error.checkThat(DataUtils.isMesmaData(locacao.getDataLocacao(), new Date()),is(true));
 		error.checkThat(DataUtils.isMesmaData(locacao.getDataRetorno(),DataUtils.obterDataComDiferencaDias(1)), is(true));
 		Assert.assertEquals("valor do Produto corresponde ao mesmo valor: ", 5.00, locacao.getValor(), 0.01);
+		
+		
+	}
+	
+	//Metodo Teste Elegante
+	@Test
+	public void testeLocacao_produtoSemEstoque() throws Exception {
+		
+		//Cenario onde inicilizaremos as variaveis ou objetos
+				Locacao locacao = new Locacao();
+				Produto carro = new Carro("cruze", 0, 75.00);
+				Usuario usuario = new Usuario("Carlos");
+				LocacaoService service = new LocacaoService();
+				
+				//Ação onde invocaremos o metodo que queremos testar
+				
+				locacao = service.alugar(usuario, carro);
 		
 		
 	}

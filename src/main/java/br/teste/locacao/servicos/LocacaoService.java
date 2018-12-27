@@ -10,7 +10,10 @@ import br.teste.locacao.entidades.Usuario;
 
 public class LocacaoService {
 	
-	public Locacao alugar(Usuario usuario, Produto produto) {
+	public Locacao alugar(Usuario usuario, Produto produto) throws Exception {
+		
+		if(produto.getEstoque() == 0) {throw new Exception("Sem estoque");}
+		
 		Locacao locacao = new Locacao();
 		locacao.setProduto(produto);
 		locacao.setUsuario(usuario);
