@@ -5,14 +5,18 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
+import org.junit.rules.ExpectedException;
 
+import br.teste.locacao.entidades.Carro;
 import br.teste.locacao.entidades.Filme;
 import br.teste.locacao.entidades.Locacao;
 import br.teste.locacao.entidades.Produto;
@@ -23,9 +27,11 @@ public class LocacaoServiceTeste {
 	
 	@Rule
 	public ErrorCollector error = new ErrorCollector();
+	@Rule
+	public ExpectedException exception = ExpectedException.none();
 	
 	@Test
-	public void testeLocacao() {
+	public void testeLocacao() throws Exception {
 		
 		//Cenario onde inicilizaremos as variaveis ou objetos
 		Locacao locacao = new Locacao();
@@ -52,5 +58,65 @@ public class LocacaoServiceTeste {
 		
 		
 	}
+	
+	//Metodo Teste Elegante
+	@Test(expected=Exception.class)
+	public void testeLocacao_produtoSemEstoque() throws Exception {
+		
+		//Cenario onde inicilizaremos as variaveis ou objetos
+				Locacao locacao = new Locacao();
+				Produto carro = new Carro("cruze", 0, 75.00);
+				Usuario usuario = new Usuario("Carlos");
+				LocacaoService service = new LocacaoService();
+				
+				//Ação onde invocaremos o metodo que queremos testar
+				
+				locacao = service.alugar(usuario, carro);	
+		
+	}
+	
+	//Metodo Teste robusto
+	@Test
+	public void testeLocacao_produtoSemEstoque_2() {
+		
+		//Cenario onde inicilizaremos as variaveis ou objetos
+				Locacao locacao = new Locacao();
+				Produto filme = new Filme("A Mumia II", 0, 5.00);
+				Usuario usuario = new Usuario("Carlos");
+				LocacaoService service = new LocacaoService();
+				
+				//Ação onde invocaremos o metodo que queremos testar
+				try {
+					locacao = service.alugar(usuario, filme);
+					fail("Deveria ter lançado uma exceção!");
+				} catch (Exception e) {
+					assertThat(e.getMessage(),is("Sem estoque"));
+				}
+		
+		
+	}
+	
+	//Metodo Teste com nova solução
+		@Test
+		public void testeLocacao_produtoSemEstoque_3() throws Exception {
+			
+			//Cenario onde inicilizaremos as variaveis ou objetos
+					Locacao locacao = new Locacao();
+					Produto carro = new Carro("Civic", 0, 85.00);
+					Usuario usuario = new Usuario("Carlos");
+					LocacaoService service = new LocacaoService();
+					
+					//Ação onde invocaremos o metodo que queremos testar
+					
+					exception.expect(Exception.class);// esperando exceção de teste
+					exception.expectMessage("Sem estoque");
+					
+					locacao = service.alugar(usuario, carro);	
+					
+					
+			
+		}
+	
+	
 
 }
