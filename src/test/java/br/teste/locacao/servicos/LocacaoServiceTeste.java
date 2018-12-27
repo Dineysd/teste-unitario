@@ -29,11 +29,11 @@ public class LocacaoServiceTeste {
 		//validação onde vamos verificar se o metodo da ação esta de acordo com o cenario especificado 
 		//ou resultado de acordo com esperado
 		
-		Assert.assertTrue("usuario corresponde ao mesmo nome: ", locacao.getUsuario().getNome().equals("Carlos"));
-		Assert.assertTrue("Produto corresponde ao mesmo nome: ", locacao.getProduto().getNome().equals("A Mumia"));
+		Assert.assertEquals("usuario corresponde ao mesmo nome: ","Carlos", locacao.getUsuario().getNome());
+		Assert.assertEquals("Produto corresponde ao mesmo nome: ","A Mumia", locacao.getProduto().getNome());
 		Assert.assertTrue("Data de locação corresponde a mesma data: ", DataUtils.isMesmaData(locacao.getDataLocacao(), new Date()));
 		Assert.assertTrue("Data de retorno corresponde a mesma data: ", DataUtils.isMesmaData(locacao.getDataRetorno(),DataUtils.obterDataComDiferencaDias(1)));
-		Assert.assertTrue("valor do Produto corresponde ao mesmo valor: ", locacao.getValor().equals(5.00));
+		Assert.assertEquals("valor do Produto corresponde ao mesmo valor: ", 5.00, locacao.getValor(), 0.01);
 		
 		
 		
