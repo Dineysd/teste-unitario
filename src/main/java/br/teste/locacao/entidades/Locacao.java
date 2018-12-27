@@ -5,7 +5,7 @@ import java.util.Date;
 public class Locacao {
 
 	private Usuario usuario;
-	private Filme filme;
+	private Produto produto;
 	private Date dataLocacao;
 	private Date dataRetorno;
 	private Double valor;
@@ -34,10 +34,10 @@ public class Locacao {
 	public void setValor(Double valor) {
 		this.valor = valor;
 	}
-	public Filme getFilme() {
-		return filme;
+	public Produto getProduto() {
+		return produto;
 	}
-	public void setFilme(Filme filme) {
-		this.filme = filme;
+	public void setProduto(Produto produto) {
+		this.produto = produto;
 	}
 }
