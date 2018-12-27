@@ -55,7 +55,7 @@ public class LocacaoServiceTeste {
 	}
 	
 	//Metodo Teste Elegante
-	@Test
+	@Test(expected=Exception.class)
 	public void testeLocacao_produtoSemEstoque() throws Exception {
 		
 		//Cenario onde inicilizaremos as variaveis ou objetos
