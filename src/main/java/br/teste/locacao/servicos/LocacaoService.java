@@ -7,13 +7,17 @@ import java.util.Date;
 import br.teste.locacao.entidades.Locacao;
 import br.teste.locacao.entidades.Produto;
 import br.teste.locacao.entidades.Usuario;
+import br.teste.locacao.exceptions.LocadoraException;
 import br.teste.locacao.exceptions.ProdutoSemEstoqueException;
 
 public class LocacaoService {
 	
+	@SuppressWarnings("unused")
 	public Locacao alugar(Usuario usuario, Produto produto) throws Exception {
 		
 		if(produto.getEstoque() == 0) {throw new ProdutoSemEstoqueException();}
+		if(usuario == null) {throw new LocadoraException("Usuario vazio!");}
+		if(produto == null) {throw new LocadoraException("Produto vazio!");}
 		
 		Locacao locacao = new Locacao();
 		locacao.setProduto(produto);
