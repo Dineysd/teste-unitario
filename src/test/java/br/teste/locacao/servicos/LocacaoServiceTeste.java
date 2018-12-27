@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 import java.util.Date;
 
@@ -67,6 +68,26 @@ public class LocacaoServiceTeste {
 				//Ação onde invocaremos o metodo que queremos testar
 				
 				locacao = service.alugar(usuario, carro);
+		
+		
+	}
+	
+	//Metodo Teste robusto
+	@Test
+	public void testeLocacao_produtoSemEstoque_2() {
+		
+		//Cenario onde inicilizaremos as variaveis ou objetos
+				Locacao locacao = new Locacao();
+				Produto filme = new Filme("A Mumia II", 0, 5.00);
+				Usuario usuario = new Usuario("Carlos");
+				LocacaoService service = new LocacaoService();
+				fail("Deveria ter lançado uma exceção!");
+				//Ação onde invocaremos o metodo que queremos testar
+				try {
+					locacao = service.alugar(usuario, filme);
+				} catch (Exception e) {
+					assertThat(e.getMessage(),is("Sem estoque"));
+				}
 		
 		
 	}
