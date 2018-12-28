@@ -44,7 +44,7 @@ public class LocacaoServiceTeste {
 	}
 
 	@Test
-	public void testeLocacao() throws Exception {
+	public void deveAlugarProdutoComSucesso() throws Exception {
 
 		// Cenario onde inicilizaremos as variaveis ou objetos
 		
@@ -75,7 +75,7 @@ public class LocacaoServiceTeste {
 
 	// Metodo Teste Elegante
 	@Test(expected = ProdutoSemEstoqueException.class)
-	public void testeLocacao_produtoSemEstoque() throws Exception {
+	public void deveLançarExcecao_AoAlugarProdutoSemEstoque() throws Exception {
 
 		// Cenario onde inicilizaremos as variaveis ou objetos
 		Locacao locacao = new Locacao();
@@ -91,7 +91,7 @@ public class LocacaoServiceTeste {
 
 	//forma robusta
 	@Test
-	public void testeLocacao_usuarioVazio() throws ProdutoSemEstoqueException {
+	public void naoDeveAlugarProdutosSemUsuario() throws ProdutoSemEstoqueException {
 		// Cenario
 		
 		Produto filme = new Filme("A Mumia II", 1, 5.00);
@@ -110,7 +110,7 @@ public class LocacaoServiceTeste {
 	
 	// Metodo de teste com nova solução
 		@Test
-		public void testeLocacao_produtoVazio() throws ProdutoSemEstoqueException, LocadoraException {
+		public void naoDeveAlugarProdutoSemExistirProduto() throws ProdutoSemEstoqueException, LocadoraException {
 
 			// Cenario onde inicilizaremos as variaveis ou objetos
 			Usuario usuario = new Usuario("Carlos");
@@ -120,6 +120,11 @@ public class LocacaoServiceTeste {
 			
 			// Ação onde invocaremos o metodo que queremos testar
 			Locacao locacao = service.alugar(usuario, null);
+		}
+		
+		@Test
+		public void devePagar75PcQuandoForTerceiroProduto() {
+			
 		}
 
 }	
