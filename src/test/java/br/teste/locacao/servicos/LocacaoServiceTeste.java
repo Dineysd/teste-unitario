@@ -9,7 +9,11 @@ import static org.junit.Assert.fail;
 
 import java.util.Date;
 
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -26,24 +30,46 @@ import br.teste.locacao.utils.DataUtils;
 
 public class LocacaoServiceTeste {
 
+	LocacaoService service;
 	@Rule
 	public ErrorCollector error = new ErrorCollector();
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
+	
+	@Before
+	public void setup() {//antes
+		service = new LocacaoService();
+		System.out.println("Before");
+	}
+	
+	@After
+	public void tearDown() {//Depois
+		System.out.println("After");
+	}
+	
+	@BeforeClass
+	public static void setupClass() {//antes de todas as classe ser instanciada
+		System.out.println("BeforeClass");
+	}
+	
+	@AfterClass
+	public static void tearDownClass() {//Depois do utimo teste finalizado
+		System.out.println("AfterClass");
+	}
 
 	@Test
 	public void testeLocacao() throws Exception {
 
 		// Cenario onde inicilizaremos as variaveis ou objetos
+		System.out.println("teste 1");
 		Locacao locacao = new Locacao();
 		Produto filme = new Filme("A Mumia", 1, 5.00);
 		Usuario usuario = new Usuario("Carlos");
-		LocacaoService service = new LocacaoService();
 
 		// Ação onde invocaremos o metodo que queremos testar
 
 		locacao = service.alugar(usuario, filme);
-
+	
 		// validação onde vamos verificar se o metodo da ação esta de acordo com o
 		// cenario especificado
 		// ou resultado de acordo com esperado
@@ -69,12 +95,10 @@ public class LocacaoServiceTeste {
 		Locacao locacao = new Locacao();
 		Produto carro = new Carro("cruze", 0, 75.00);
 		Usuario usuario = new Usuario("Carlos");
-		LocacaoService service = new LocacaoService();
 
 		// Ação onde invocaremos o metodo que queremos testar
 
 		locacao = service.alugar(usuario, carro);
-
 	}
 
 	//forma robusta
@@ -82,7 +106,6 @@ public class LocacaoServiceTeste {
 	public void testeLocacao_usuarioVazio() throws ProdutoSemEstoqueException {
 		// Cenario
 		Produto filme = new Filme("A Mumia II", 1, 5.00);
-		LocacaoService service = new LocacaoService();
 		// Ação 
 		try {
 			Locacao locacao = service.alugar(null, filme);
@@ -98,16 +121,13 @@ public class LocacaoServiceTeste {
 		public void testeLocacao_produtoVazio() throws ProdutoSemEstoqueException, LocadoraException {
 
 			// Cenario onde inicilizaremos as variaveis ou objetos
-			Locacao locacao = new Locacao();
 			Usuario usuario = new Usuario("Carlos");
-			LocacaoService service = new LocacaoService();
 
 			exception.expect(LocadoraException.class );
 			exception.expectMessage("Produto vazio!");
 			
 			// Ação onde invocaremos o metodo que queremos testar
-			locacao = service.alugar(usuario, null);
-
+			Locacao locacao = service.alugar(usuario, null);
 		}
 
 }	
