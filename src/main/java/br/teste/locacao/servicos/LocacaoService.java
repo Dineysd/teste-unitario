@@ -58,6 +58,12 @@ public class LocacaoService {
 			if (i == 2) {
 				valorProduto = valorProduto * 0.75;
 			}
+			if (i == 3) {
+				valorProduto = valorProduto * 0.5;
+			}
+			if (i == 4) {
+				valorProduto = valorProduto * 0.25;
+			}
 			valorTotal += valorProduto;
 		}
 		return valorTotal;

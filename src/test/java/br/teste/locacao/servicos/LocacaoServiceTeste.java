@@ -139,5 +139,44 @@ public class LocacaoServiceTeste {
 			
 			assertThat(locacao.getValor(), is(87.0));;
 		}
+		
+		@Test
+		public void devePagar50PcQuandoForOQuartoProduto() throws ProdutoSemEstoqueException, LocadoraException {
+			//cenario
+			Usuario usuario = new Usuario("Diney");
+			Produto filme = new Filme("Vendedor de sonhos", 1, 6.00);
+			Produto filme2 = new Filme("Superando Limites", 1, 6.00);
+			Produto carro = new Carro("Porche Carrera", 1, 100.00);
+			Produto carro2 = new Carro("Lamborguine", 1, 200.00);
+			produtos = Arrays.asList(filme, filme2, carro, carro2);
+			
+			
+			//Ação
+			Locacao locacao = service.alugar(usuario, produtos);
+			
+			//Verificação
+			
+			assertThat(locacao.getValor(), is(187.0));;
+		}
+		
+		@Test
+		public void devePagar25PcQuandoForOQuintoProduto() throws ProdutoSemEstoqueException, LocadoraException {
+			//cenario
+			Usuario usuario = new Usuario("Diney");
+			Produto filme = new Filme("Vendedor de sonhos", 1, 6.00);
+			Produto filme2 = new Filme("Superando Limites", 1, 6.00);
+			Produto carro = new Carro("Porche Carrera", 1, 100.00);
+			Produto carro2 = new Carro("Lamborguine", 1, 200.00);
+			Produto filme3 = new Filme("Vendedor de sonhos II", 2, 6.00);
+			produtos = Arrays.asList(filme, filme2, carro, carro2, filme3);
+			
+			
+			//Ação
+			Locacao locacao = service.alugar(usuario, produtos);
+			
+			//Verificação
+			
+			assertThat(locacao.getValor(), is(188.5));;
+		}
 
 }	
