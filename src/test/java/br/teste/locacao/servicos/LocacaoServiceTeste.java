@@ -3,16 +3,18 @@ package br.teste.locacao.servicos;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -36,18 +38,20 @@ public class LocacaoServiceTeste {
 	public ErrorCollector error = new ErrorCollector();
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
-	
+
 	@Before
-	public void setup() {//antes
+	public void setup() {// antes
 		service = new LocacaoService();
 		produtos = new ArrayList<Produto>();
 	}
 
 	@Test
 	public void deveAlugarProdutoComSucesso() throws Exception {
+		// adicionando o sabado para o teste funcionar, ele só funciona se for SABADO
+		Assume.assumeFalse(DataUtils.verificarDiaSemana(new Date(), Calendar.SATURDAY));
 
 		// Cenario onde inicilizaremos as variaveis ou objetos
-		
+
 		Produto filme = new Filme("A Mumia", 1, 5.00);
 		Produto filme2 = new Filme("Sem Limites", 2, 5.00);
 		Usuario usuario = new Usuario("Carlos");
@@ -56,7 +60,7 @@ public class LocacaoServiceTeste {
 		// Ação onde invocaremos o metodo que queremos testar
 
 		Locacao locacao = service.alugar(usuario, produtos);
-	
+
 		// validação onde vamos verificar se o metodo da ação esta de acordo com o
 		// cenario especificado
 		// ou resultado de acordo com esperado
@@ -89,115 +93,132 @@ public class LocacaoServiceTeste {
 		locacao = service.alugar(usuario, produtos);
 	}
 
-	//forma robusta
+	// forma robusta
 	@Test
 	public void naoDeveAlugarProdutosSemUsuario() throws ProdutoSemEstoqueException {
 		// Cenario
-		
+
 		Produto filme = new Filme("A Mumia II", 1, 5.00);
 		Produto filme2 = new Filme("Sem Limites", 2, 5.00);
 		Produto filme3 = new Filme("tropa de elite", 3, 5.00);
 		produtos = Arrays.asList(filme, filme2, filme3);
-		// Ação 
+		// Ação
 		try {
 			Locacao locacao = service.alugar(null, produtos);
 			fail("Deveria lançar uma exception!");
 		} catch (LocadoraException e) {
-			assertThat(e.getMessage(),is("Usuario vazio!"));
+			assertThat(e.getMessage(), is("Usuario vazio!"));
 		}
 
 	}
-	
+
 	// Metodo de teste com nova solução
-		@Test
-		public void naoDeveAlugarProdutoSemExistirProduto() throws ProdutoSemEstoqueException, LocadoraException {
+	@Test
+	public void naoDeveAlugarProdutoSemExistirProduto() throws ProdutoSemEstoqueException, LocadoraException {
 
-			// Cenario onde inicilizaremos as variaveis ou objetos
-			Usuario usuario = new Usuario("Carlos");
+		// Cenario onde inicilizaremos as variaveis ou objetos
+		Usuario usuario = new Usuario("Carlos");
 
-			exception.expect(LocadoraException.class );
-			exception.expectMessage("Produto vazio!");
-			
-			// Ação onde invocaremos o metodo que queremos testar
-			Locacao locacao = service.alugar(usuario, null);
-		}
-		
-		@Test
-		public void devePagar75PcQuandoForOTerceiroProduto() throws ProdutoSemEstoqueException, LocadoraException {
-			//cenario
-			Usuario usuario = new Usuario("Diney");
-			Produto filme = new Filme("Vendedor de sonhos", 1, 6.00);
-			Produto filme2 = new Filme("Superando Limites", 1, 6.00);
-			Produto carro = new Carro("Porche Carrera", 1, 100.00);
-			produtos = Arrays.asList(filme, filme2, carro);
-			
-			
-			//Ação
-			Locacao locacao = service.alugar(usuario, produtos);
-			
-			//Verificação
-			
-			assertThat(locacao.getValor(), is(87.0));;
-		}
-		
-		@Test
-		public void devePagar50PcQuandoForOQuartoProduto() throws ProdutoSemEstoqueException, LocadoraException {
-			//cenario
-			Usuario usuario = new Usuario("Diney");
-			Produto filme = new Filme("Vendedor de sonhos", 1, 6.00);
-			Produto filme2 = new Filme("Superando Limites", 1, 6.00);
-			Produto carro = new Carro("Porche Carrera", 1, 100.00);
-			Produto carro2 = new Carro("Lamborguine", 1, 200.00);
-			produtos = Arrays.asList(filme, filme2, carro, carro2);
-			
-			
-			//Ação
-			Locacao locacao = service.alugar(usuario, produtos);
-			
-			//Verificação
-			
-			assertThat(locacao.getValor(), is(187.0));;
-		}
-		
-		@Test
-		public void devePagar25PcQuandoForOQuintoProduto() throws ProdutoSemEstoqueException, LocadoraException {
-			//cenario
-			Usuario usuario = new Usuario("Diney");
-			Produto filme = new Filme("Vendedor de sonhos", 1, 6.00);
-			Produto filme2 = new Filme("Superando Limites", 1, 6.00);
-			Produto carro = new Carro("Porche Carrera", 1, 100.00);
-			Produto carro2 = new Carro("Lamborguine", 1, 200.00);
-			Produto filme3 = new Filme("Vendedor de sonhos II", 2, 6.00);
-			produtos = Arrays.asList(filme, filme2, carro, carro2, filme3);
-			
-			
-			//Ação
-			Locacao locacao = service.alugar(usuario, produtos);
-			
-			//Verificação
-			
-			assertThat(locacao.getValor(), is(188.5));;
-		}
-		
-		@Test
-		public void devePagarZeroPcQuandoForOSextoProduto() throws ProdutoSemEstoqueException, LocadoraException {
-			//cenario
-			Usuario usuario = new Usuario("Diney");
-			Produto filme = new Filme("Vendedor de sonhos", 1, 6.00);
-			Produto filme2 = new Filme("Superando Limites", 1, 6.00);
-			Produto carro = new Carro("Porche Carrera", 1, 100.00);
-			Produto carro2 = new Carro("Lamborguine", 1, 200.00);
-			Produto filme3 = new Filme("Vendedor de sonhos II", 2, 6.00);
-			Produto carro3 = new Carro("Civic", 2, 85.00);
-			produtos = Arrays.asList(filme, filme2, carro, carro2, filme3, carro3);
-			
-			
-			//Ação
-			Locacao locacao = service.alugar(usuario, produtos);
-			
-			//Verificação
-			
-			assertThat(locacao.getValor(), is(188.5));;
-		}
+		exception.expect(LocadoraException.class);
+		exception.expectMessage("Produto vazio!");
 
-}	
+		// Ação onde invocaremos o metodo que queremos testar
+		Locacao locacao = service.alugar(usuario, null);
+	}
+
+	@Test
+	public void devePagar75PcQuandoForOTerceiroProduto() throws ProdutoSemEstoqueException, LocadoraException {
+		// cenario
+		Usuario usuario = new Usuario("Diney");
+		Produto filme = new Filme("Vendedor de sonhos", 1, 6.00);
+		Produto filme2 = new Filme("Superando Limites", 1, 6.00);
+		Produto carro = new Carro("Porche Carrera", 1, 100.00);
+		produtos = Arrays.asList(filme, filme2, carro);
+
+		// Ação
+		Locacao locacao = service.alugar(usuario, produtos);
+
+		// Verificação
+
+		assertThat(locacao.getValor(), is(87.0));
+		;
+	}
+
+	@Test
+	public void devePagar50PcQuandoForOQuartoProduto() throws ProdutoSemEstoqueException, LocadoraException {
+		// cenario
+		Usuario usuario = new Usuario("Diney");
+		Produto filme = new Filme("Vendedor de sonhos", 1, 6.00);
+		Produto filme2 = new Filme("Superando Limites", 1, 6.00);
+		Produto carro = new Carro("Porche Carrera", 1, 100.00);
+		Produto carro2 = new Carro("Lamborguine", 1, 200.00);
+		produtos = Arrays.asList(filme, filme2, carro, carro2);
+
+		// Ação
+		Locacao locacao = service.alugar(usuario, produtos);
+
+		// Verificação
+
+		assertThat(locacao.getValor(), is(187.0));
+		;
+	}
+
+	@Test
+	public void devePagar25PcQuandoForOQuintoProduto() throws ProdutoSemEstoqueException, LocadoraException {
+		// cenario
+		Usuario usuario = new Usuario("Diney");
+		Produto filme = new Filme("Vendedor de sonhos", 1, 6.00);
+		Produto filme2 = new Filme("Superando Limites", 1, 6.00);
+		Produto carro = new Carro("Porche Carrera", 1, 100.00);
+		Produto carro2 = new Carro("Lamborguine", 1, 200.00);
+		Produto filme3 = new Filme("Vendedor de sonhos II", 2, 6.00);
+		produtos = Arrays.asList(filme, filme2, carro, carro2, filme3);
+
+		// Ação
+		Locacao locacao = service.alugar(usuario, produtos);
+
+		// Verificação
+
+		assertThat(locacao.getValor(), is(188.5));
+		;
+	}
+
+	@Test
+	public void devePagarZeroPcQuandoForOSextoProduto() throws ProdutoSemEstoqueException, LocadoraException {
+		// cenario
+		Usuario usuario = new Usuario("Diney");
+		Produto filme = new Filme("Vendedor de sonhos", 1, 6.00);
+		Produto filme2 = new Filme("Superando Limites", 1, 6.00);
+		Produto carro = new Carro("Porche Carrera", 1, 100.00);
+		Produto carro2 = new Carro("Lamborguine", 1, 200.00);
+		Produto filme3 = new Filme("Vendedor de sonhos II", 2, 6.00);
+		Produto carro3 = new Carro("Civic", 2, 85.00);
+		produtos = Arrays.asList(filme, filme2, carro, carro2, filme3, carro3);
+
+		// Ação
+		Locacao locacao = service.alugar(usuario, produtos);
+
+		// Verificação
+
+		assertThat(locacao.getValor(), is(188.5));
+		;
+	}
+
+	@Test
+	public void DeveDevolverNaSegundaAoAlugarNoSabado() throws ProdutoSemEstoqueException, LocadoraException {
+		// adicionando o sabado para o teste funcionar, ele só funciona se for SABADO
+		Assume.assumeTrue(DataUtils.verificarDiaSemana(new Date(), Calendar.SATURDAY));
+
+		// cenario
+		Usuario usuario = new Usuario("Sandra");
+		Produto carro = new Carro("Mustang cobra", 1, 145.0);
+		produtos = Arrays.asList(carro);
+
+		// Ação
+		Locacao retorno = service.alugar(usuario, produtos);
+		// verificação
+		boolean heSegunda = DataUtils.verificarDiaSemana(retorno.getDataRetorno(), Calendar.MONDAY);
+		Assert.assertTrue(heSegunda);
+	}
+
+}

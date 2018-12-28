@@ -2,6 +2,7 @@ package br.teste.locacao.servicos;
 
 import static br.teste.locacao.utils.DataUtils.adicionarDias;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import br.teste.locacao.entidades.Produto;
 import br.teste.locacao.entidades.Usuario;
 import br.teste.locacao.exceptions.LocadoraException;
 import br.teste.locacao.exceptions.ProdutoSemEstoqueException;
+import br.teste.locacao.utils.DataUtils;
 
 public class LocacaoService {
 
@@ -41,6 +43,9 @@ public class LocacaoService {
 		// Entrega no dia seguinte
 		Date dataEntrega = new Date();
 		dataEntrega = adicionarDias(dataEntrega, 1);
+		if(DataUtils.verificarDiaSemana(dataEntrega, Calendar.SUNDAY)) {
+			dataEntrega = adicionarDias(dataEntrega, 1);
+		}
 		locacao.setDataRetorno(dataEntrega);
 
 		// Salvando a locacao...
