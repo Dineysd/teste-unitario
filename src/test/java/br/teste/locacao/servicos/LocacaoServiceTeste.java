@@ -39,36 +39,18 @@ public class LocacaoServiceTeste {
 	@Before
 	public void setup() {//antes
 		service = new LocacaoService();
-		System.out.println("Before");
-	}
-	
-	@After
-	public void tearDown() {//Depois
-		System.out.println("After");
-	}
-	
-	@BeforeClass
-	public static void setupClass() {//antes de todas as classe ser instanciada
-		System.out.println("BeforeClass");
-	}
-	
-	@AfterClass
-	public static void tearDownClass() {//Depois do utimo teste finalizado
-		System.out.println("AfterClass");
 	}
 
 	@Test
 	public void testeLocacao() throws Exception {
 
 		// Cenario onde inicilizaremos as variaveis ou objetos
-		System.out.println("teste 1");
-		Locacao locacao = new Locacao();
 		Produto filme = new Filme("A Mumia", 1, 5.00);
 		Usuario usuario = new Usuario("Carlos");
 
 		// Ação onde invocaremos o metodo que queremos testar
 
-		locacao = service.alugar(usuario, filme);
+		Locacao locacao = service.alugar(usuario, filme);
 	
 		// validação onde vamos verificar se o metodo da ação esta de acordo com o
 		// cenario especificado
