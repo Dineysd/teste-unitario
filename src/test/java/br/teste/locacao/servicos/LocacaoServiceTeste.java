@@ -44,7 +44,7 @@ public class LocacaoServiceTeste {
 	}
 
 	@Test
-	public void testeLocacao() throws Exception {
+	public void deveAlugarProdutoComSucesso() throws Exception {
 
 		// Cenario onde inicilizaremos as variaveis ou objetos
 		
@@ -75,7 +75,7 @@ public class LocacaoServiceTeste {
 
 	// Metodo Teste Elegante
 	@Test(expected = ProdutoSemEstoqueException.class)
-	public void testeLocacao_produtoSemEstoque() throws Exception {
+	public void deveLançarExcecao_AoAlugarProdutoSemEstoque() throws Exception {
 
 		// Cenario onde inicilizaremos as variaveis ou objetos
 		Locacao locacao = new Locacao();
@@ -91,7 +91,7 @@ public class LocacaoServiceTeste {
 
 	//forma robusta
 	@Test
-	public void testeLocacao_usuarioVazio() throws ProdutoSemEstoqueException {
+	public void naoDeveAlugarProdutosSemUsuario() throws ProdutoSemEstoqueException {
 		// Cenario
 		
 		Produto filme = new Filme("A Mumia II", 1, 5.00);
@@ -110,7 +110,7 @@ public class LocacaoServiceTeste {
 	
 	// Metodo de teste com nova solução
 		@Test
-		public void testeLocacao_produtoVazio() throws ProdutoSemEstoqueException, LocadoraException {
+		public void naoDeveAlugarProdutoSemExistirProduto() throws ProdutoSemEstoqueException, LocadoraException {
 
 			// Cenario onde inicilizaremos as variaveis ou objetos
 			Usuario usuario = new Usuario("Carlos");
@@ -120,6 +120,84 @@ public class LocacaoServiceTeste {
 			
 			// Ação onde invocaremos o metodo que queremos testar
 			Locacao locacao = service.alugar(usuario, null);
+		}
+		
+		@Test
+		public void devePagar75PcQuandoForOTerceiroProduto() throws ProdutoSemEstoqueException, LocadoraException {
+			//cenario
+			Usuario usuario = new Usuario("Diney");
+			Produto filme = new Filme("Vendedor de sonhos", 1, 6.00);
+			Produto filme2 = new Filme("Superando Limites", 1, 6.00);
+			Produto carro = new Carro("Porche Carrera", 1, 100.00);
+			produtos = Arrays.asList(filme, filme2, carro);
+			
+			
+			//Ação
+			Locacao locacao = service.alugar(usuario, produtos);
+			
+			//Verificação
+			
+			assertThat(locacao.getValor(), is(87.0));;
+		}
+		
+		@Test
+		public void devePagar50PcQuandoForOQuartoProduto() throws ProdutoSemEstoqueException, LocadoraException {
+			//cenario
+			Usuario usuario = new Usuario("Diney");
+			Produto filme = new Filme("Vendedor de sonhos", 1, 6.00);
+			Produto filme2 = new Filme("Superando Limites", 1, 6.00);
+			Produto carro = new Carro("Porche Carrera", 1, 100.00);
+			Produto carro2 = new Carro("Lamborguine", 1, 200.00);
+			produtos = Arrays.asList(filme, filme2, carro, carro2);
+			
+			
+			//Ação
+			Locacao locacao = service.alugar(usuario, produtos);
+			
+			//Verificação
+			
+			assertThat(locacao.getValor(), is(187.0));;
+		}
+		
+		@Test
+		public void devePagar25PcQuandoForOQuintoProduto() throws ProdutoSemEstoqueException, LocadoraException {
+			//cenario
+			Usuario usuario = new Usuario("Diney");
+			Produto filme = new Filme("Vendedor de sonhos", 1, 6.00);
+			Produto filme2 = new Filme("Superando Limites", 1, 6.00);
+			Produto carro = new Carro("Porche Carrera", 1, 100.00);
+			Produto carro2 = new Carro("Lamborguine", 1, 200.00);
+			Produto filme3 = new Filme("Vendedor de sonhos II", 2, 6.00);
+			produtos = Arrays.asList(filme, filme2, carro, carro2, filme3);
+			
+			
+			//Ação
+			Locacao locacao = service.alugar(usuario, produtos);
+			
+			//Verificação
+			
+			assertThat(locacao.getValor(), is(188.5));;
+		}
+		
+		@Test
+		public void devePagarZeroPcQuandoForOSextoProduto() throws ProdutoSemEstoqueException, LocadoraException {
+			//cenario
+			Usuario usuario = new Usuario("Diney");
+			Produto filme = new Filme("Vendedor de sonhos", 1, 6.00);
+			Produto filme2 = new Filme("Superando Limites", 1, 6.00);
+			Produto carro = new Carro("Porche Carrera", 1, 100.00);
+			Produto carro2 = new Carro("Lamborguine", 1, 200.00);
+			Produto filme3 = new Filme("Vendedor de sonhos II", 2, 6.00);
+			Produto carro3 = new Carro("Civic", 2, 85.00);
+			produtos = Arrays.asList(filme, filme2, carro, carro2, filme3, carro3);
+			
+			
+			//Ação
+			Locacao locacao = service.alugar(usuario, produtos);
+			
+			//Verificação
+			
+			assertThat(locacao.getValor(), is(188.5));;
 		}
 
 }	
