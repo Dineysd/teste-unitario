@@ -20,6 +20,7 @@ import br.teste.locacao.entidades.Filme;
 import br.teste.locacao.entidades.Locacao;
 import br.teste.locacao.entidades.Produto;
 import br.teste.locacao.entidades.Usuario;
+import br.teste.locacao.exceptions.LocadoraException;
 import br.teste.locacao.exceptions.ProdutoSemEstoqueException;
 import br.teste.locacao.utils.DataUtils;
 
@@ -76,6 +77,37 @@ public class LocacaoServiceTeste {
 
 	}
 
-	
+	//forma robusta
+	@Test
+	public void testeLocacao_usuarioVazio() throws ProdutoSemEstoqueException {
+		// Cenario
+		Produto filme = new Filme("A Mumia II", 1, 5.00);
+		LocacaoService service = new LocacaoService();
+		// Ação 
+		try {
+			Locacao locacao = service.alugar(null, filme);
+			fail("Deveria lançar uma exception!");
+		} catch (LocadoraException e) {
+			assertThat(e.getMessage(),is("Usuario vazio!"));
+		}
 
-}
+	}
+	
+	// Metodo de teste com nova solução
+		@Test
+		public void testeLocacao_produtoVazio() throws ProdutoSemEstoqueException, LocadoraException {
+
+			// Cenario onde inicilizaremos as variaveis ou objetos
+			Locacao locacao = new Locacao();
+			Usuario usuario = new Usuario("Carlos");
+			LocacaoService service = new LocacaoService();
+
+			exception.expect(LocadoraException.class );
+			exception.expectMessage("Produto vazio!");
+			
+			// Ação onde invocaremos o metodo que queremos testar
+			locacao = service.alugar(usuario, null);
+
+		}
+
+}	
