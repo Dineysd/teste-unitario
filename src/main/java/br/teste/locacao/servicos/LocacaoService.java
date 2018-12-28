@@ -55,14 +55,15 @@ public class LocacaoService {
 		for (int i = 0; i < produtos.size(); i++) {
 			Produto produto = produtos.get(i);
 			Double valorProduto = produto.getPrecoLocacao();
-			if (i == 2) {
-				valorProduto = valorProduto * 0.75;
-			}
-			if (i == 3) {
-				valorProduto = valorProduto * 0.5;
-			}
-			if (i == 4) {
-				valorProduto = valorProduto * 0.25;
+			switch (i) {
+			case 2:
+				valorProduto = valorProduto * 0.75; break;
+			case 3:
+				valorProduto = valorProduto * 0.5; break;
+			case 4:
+				valorProduto = valorProduto * 0.25; break;
+			case 5:
+				valorProduto = 0d; break;
 			}
 			valorTotal += valorProduto;
 		}
