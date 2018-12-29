@@ -1,10 +1,12 @@
 package br.teste.locacao.servicos;
 
+import static br.teste.locacao.matcher.MatcherProprios.sejaEm;
+import static br.teste.locacao.matcher.MatcherProprios.sejaNaSegunda;
+import static br.teste.locacao.utils.DataUtils.verificarDiaSemana;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
@@ -13,6 +15,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.hamcrest.Matcher;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
@@ -28,6 +31,7 @@ import br.teste.locacao.entidades.Produto;
 import br.teste.locacao.entidades.Usuario;
 import br.teste.locacao.exceptions.LocadoraException;
 import br.teste.locacao.exceptions.ProdutoSemEstoqueException;
+import br.teste.locacao.matcher.MatcherProprios;
 import br.teste.locacao.utils.DataUtils;
 
 public class LocacaoServiceTeste {
@@ -129,7 +133,7 @@ public class LocacaoServiceTeste {
 	@Test
 	public void DeveDevolverNaSegundaAoAlugarNoSabado() throws ProdutoSemEstoqueException, LocadoraException {
 		// adicionando o sabado para o teste funcionar, ele só funciona se for SABADO
-		Assume.assumeTrue(DataUtils.verificarDiaSemana(new Date(), Calendar.SATURDAY));
+		Assume.assumeTrue(verificarDiaSemana(new Date(), Calendar.SATURDAY));
 
 		// cenario
 		Usuario usuario = new Usuario("Sandra");
@@ -139,8 +143,10 @@ public class LocacaoServiceTeste {
 		// Ação
 		Locacao retorno = service.alugar(usuario, produtos);
 		// verificação
-		boolean heSegunda = DataUtils.verificarDiaSemana(retorno.getDataRetorno(), Calendar.MONDAY);
+		boolean heSegunda = verificarDiaSemana(retorno.getDataRetorno(), Calendar.MONDAY);
 		Assert.assertTrue(heSegunda);
+		//assertThat(retorno.getDataRetorno(), sejaEm(Calendar.MONDAY));
+		assertThat(retorno.getDataRetorno(), sejaNaSegunda());
 	}
 
 }
